@@ -1,0 +1,43 @@
+CC  = gcc
+CXX = g++
+
+INCLUDE  = -I../include -I../lib -I../ -I/usr/local/include -I/usr/include -I/usr/X11R6/include
+LDLIBS   = -L../lib -L/usr/local/lib -L/usr/lib -L/usr/X11R6/lib
+
+OTHERINCLUDE = 
+
+CFLAGS = -Wall -O2 
+CXXFLAGS = -Wall -O2 
+
+RELEASEFLAGS = $(CXXFLAGS) -DNDEBUG
+DEBUGFLAGS   = $(CXXFLAGS) -DDEBUG
+
+IMGLIBS = -ljpeg -lpng -ltiff
+#IMGLIBS = -ljpeg -lpng -ltiff -lgif
+LIBS = -lpthread -lz -lm
+LAPACKLIBS = -L../lib -llapack -lblas -lI77 -lF77
+ATLASLIBS = -L../lib -llapack -lcblaswr -lcblas -latlas -lF77
+MKLASLIBS = -L../lib -lmkl_lapack
+
+# Be quiet when building...
+.SILENT:
+
+# Build commands and filename extensions...
+.SUFFIXES: .c .cpp .cxx .h .o .obj
+
+.c.o:
+	echo Compiling $<...
+	$(CC) -I.. $(CFLAGS) -c $< $(OTHERINCLUDE)
+
+.cxx.o:
+	echo Compiling $<...
+	$(CXX) $(CXXFLAGS) -c $< $(INCLUDE) $(OTHERINCLUDE)
+
+.cpp.o:
+	echo Compiling $<...
+	$(CXX) $(CXXFLAGS) -c $< $(INCLUDE) $(OTHERINCLUDE)
+
+# For FLTK compilation
+.cpp.obj:
+	echo Compiling $<...
+	$(CXX) $(CXXFLAGS) -c $< -o $*.obj $(INCLUDE) `fltk-config --use-gl --cxxflags`
